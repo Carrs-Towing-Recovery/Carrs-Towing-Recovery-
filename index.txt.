@@ -1,0 +1,190 @@
+from pathlib import Path
+import zipfile, textwrap, os
+
+root = Path("/mnt/data/carrs-towing-recovery")
+root.mkdir(parents=True, exist_ok=True)
+
+index_html = r'''<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#c8102e">
+  <meta name="description" content="Carrs Towing & Recovery — towing, roadside assistance, recovery and emergency service in Veedersburg, Indiana and surrounding areas.">
+  <title>Carrs Towing & Recovery | Veedersburg, IN</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="container nav">
+    <a class="brand" href="#home" aria-label="Carrs Towing & Recovery home">
+      <span class="brand-mark">C</span>
+      <span><strong>CARRS</strong><small>TOWING & RECOVERY</small></span>
+    </a>
+    <a class="call-small" href="tel:+17652994181">☎ 765-299-4181</a>
+  </div>
+</header>
+
+<main id="home">
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container hero-content">
+      <div class="badge">🚨 LOCAL • RELIABLE • READY TO HELP</div>
+      <h1>When you need a tow,<br><span>Carrs comes through.</span></h1>
+      <p class="lead">Professional towing, recovery and roadside assistance serving Veedersburg, Indiana and surrounding communities.</p>
+      <div class="hero-buttons">
+        <a class="btn btn-red" href="tel:+17652994181">☎ CALL NOW</a>
+        <a class="btn btn-outline" href="#services">VIEW SERVICES</a>
+      </div>
+      <p class="phone-note">Emergency service • Call <strong>765-299-4181</strong></p>
+    </div>
+  </section>
+
+  <section class="trust">
+    <div class="container trust-grid">
+      <div><b>24/7</b><span>Emergency Help</span></div>
+      <div><b>LOCAL</b><span>Veedersburg, IN</span></div>
+      <div><b>FAST</b><span>Roadside Response</span></div>
+    </div>
+  </section>
+
+  <section id="services" class="section">
+    <div class="container">
+      <div class="section-heading">
+        <span>WHAT WE DO</span>
+        <h2>Towing & roadside services</h2>
+        <p>From a dead battery to a difficult recovery, we're ready to help get you moving again.</p>
+      </div>
+      <div class="cards">
+        <article class="card"><div class="icon">🚛</div><h3>Vehicle Towing</h3><p>Reliable towing for cars, trucks and everyday breakdowns.</p></article>
+        <article class="card"><div class="icon">⛓️</div><h3>Recovery & Winch-Outs</h3><p>Help with vehicles stuck in mud, ditches, snow and tough spots.</p></article>
+        <article class="card"><div class="icon">🔋</div><h3>Jump Starts</h3><p>Dead battery? Give us a call and we'll help get you going.</p></article>
+        <article class="card"><div class="icon">🔑</div><h3>Lockouts</h3><p>Locked your keys in the vehicle? Call Carrs for roadside help.</p></article>
+        <article class="card"><div class="icon">🛞</div><h3>Tire Changes</h3><p>Roadside assistance when you need a tire changed.</p></article>
+        <article class="card"><div class="icon">⛽</div><h3>Fuel Delivery</h3><p>Ran out of fuel? We can bring roadside fuel assistance.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="emergency">
+    <div class="container emergency-inner">
+      <div>
+        <span>STRANDED RIGHT NOW?</span>
+        <h2>Don't wait. Call Carrs.</h2>
+        <p>Tell us where you are and what's going on. We'll help you figure out the next step.</p>
+      </div>
+      <a class="btn btn-white" href="tel:+17652994181">☎ 765-299-4181</a>
+    </div>
+  </section>
+
+  <section id="area" class="section dark-section">
+    <div class="container area-grid">
+      <div>
+        <div class="section-heading left">
+          <span>SERVICE AREA</span>
+          <h2>Serving our neighbors.</h2>
+          <p>Carrs Towing & Recovery is based in Veedersburg, Indiana and serves surrounding communities and backroads.</p>
+        </div>
+        <div class="towns">
+          <span>Veedersburg</span><span>Attica</span><span>Covington</span>
+          <span>Hillsboro</span><span>Wingate</span><span>West Lebanon</span>
+          <span>Fountain County</span><span>Warren County</span>
+        </div>
+      </div>
+      <div class="area-box">
+        <div class="pin">📍</div>
+        <h3>Veedersburg, Indiana</h3>
+        <p>Local towing & recovery<br>Serving surrounding areas</p>
+        <a href="tel:+17652994181">Call for service →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container about">
+      <div class="about-photo"><span>CARRS</span><small>TOWING & RECOVERY</small></div>
+      <div>
+        <div class="section-heading left">
+          <span>WHY CARRS</span>
+          <h2>Local people. Real help.</h2>
+        </div>
+        <p>When your vehicle leaves you stuck on the side of the road, you need someone who answers and gets to work. Carrs Towing & Recovery is built around dependable service, hard work and helping people in our community.</p>
+        <p class="strong">Need help? Don't hesitate to call.</p>
+        <a class="btn btn-red" href="tel:+17652994181">CALL CARRS</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="container contact-inner">
+      <div class="section-heading left">
+        <span>CONTACT</span>
+        <h2>Need a tow?</h2>
+        <p>Call Carrs Towing & Recovery and tell us what you need.</p>
+      </div>
+      <a class="big-phone" href="tel:+17652994181">765-299-4181</a>
+      <p>Veedersburg, Indiana • Towing • Recovery • Roadside Assistance</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <div><strong>CARRS TOWING & RECOVERY</strong><br><span>Veedersburg, Indiana</span></div>
+    <a href="tel:+17652994181">765-299-4181</a>
+  </div>
+  <div class="copyright">© <span id="year"></span> Carrs Towing & Recovery. All rights reserved.</div>
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
+'''
+
+style_css = r''':root{
+  --red:#d20f2f; --red2:#ff2447; --black:#08090b; --dark:#101216;
+  --card:#17191e; --white:#fff; --muted:#aeb3bd; --line:#292d35;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#fff;color:#17191e;font-family:Arial,Helvetica,sans-serif;line-height:1.6}
+.container{width:min(1120px,92%);margin:auto}.topbar{background:#090a0c;color:#fff;border-bottom:1px solid #24262b;position:sticky;top:0;z-index:10}
+.nav{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none}.brand-mark{display:grid;place-items:center;width:42px;height:42px;background:var(--red);font-weight:900;font-size:25px;transform:skew(-8deg)}.brand strong{display:block;letter-spacing:2px;font-size:20px}.brand small{display:block;color:#aaa;font-size:9px;letter-spacing:2px}.call-small{color:#fff;text-decoration:none;font-weight:800}.call-small:hover{color:#ff4863}
+.hero{min-height:650px;display:flex;align-items:center;background:radial-gradient(circle at 78% 35%,#3b1018 0,#171016 23%,#08090b 58%);color:#fff;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;right:-100px;bottom:-160px;width:650px;height:650px;border:80px solid rgba(210,15,47,.08);border-radius:50%}.hero-content{position:relative;z-index:2;padding:80px 0}.badge{display:inline-block;border:1px solid #61202a;color:#ff6b80;background:#210e13;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:800;letter-spacing:1px}.hero h1{font-size:clamp(42px,7vw,78px);line-height:1.02;margin:22px 0 20px;letter-spacing:-3px}.hero h1 span{color:#ff304e}.lead{max-width:680px;color:#c7c9cf;font-size:19px}.hero-buttons{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:0 24px;border-radius:7px;text-decoration:none;font-weight:900;letter-spacing:.5px}.btn-red{background:var(--red);color:#fff;box-shadow:0 8px 25px rgba(210,15,47,.2)}.btn-red:hover{background:#ef183c}.btn-outline{border:1px solid #555b65;color:#fff}.btn-outline:hover{border-color:#fff}.phone-note{color:#9298a3;margin-top:18px;font-size:14px}
+.trust{background:var(--red);color:#fff}.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);padding:23px 0}.trust-grid div{text-align:center;border-right:1px solid rgba(255,255,255,.22)}.trust-grid div:last-child{border:0}.trust-grid b{display:block;font-size:22px}.trust-grid span{font-size:12px;opacity:.9;text-transform:uppercase;letter-spacing:1px}
+.section{padding:88px 0}.section-heading{text-align:center;margin-bottom:42px}.section-heading>span{color:var(--red);font-weight:900;font-size:12px;letter-spacing:2px}.section-heading h2{font-size:clamp(31px,5vw,48px);line-height:1.1;margin:9px 0 12px}.section-heading p{max-width:680px;margin:auto;color:#686e78}.section-heading.left{text-align:left}.section-heading.left p{margin:0}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border:1px solid #e3e5e8;border-radius:12px;padding:28px;transition:.2s}.card:hover{transform:translateY(-4px);box-shadow:0 14px 35px rgba(0,0,0,.08);border-color:#f0b6bf}.icon{font-size:32px;margin-bottom:16px}.card h3{margin:0 0 7px;font-size:20px}.card p{color:#707680;margin:0}
+.emergency{background:var(--red);color:#fff}.emergency-inner{padding:48px 0;display:flex;align-items:center;justify-content:space-between;gap:25px}.emergency span{font-size:12px;font-weight:900;letter-spacing:2px;opacity:.85}.emergency h2{font-size:36px;margin:3px 0}.emergency p{margin:0;opacity:.9}.btn-white{background:#fff;color:#111;white-space:nowrap}
+.dark-section{background:#0b0d10;color:#fff}.dark-section .section-heading p{color:#a3a8b1}.area-grid{display:grid;grid-template-columns:1.5fr .8fr;gap:70px;align-items:center}.towns{display:flex;flex-wrap:wrap;gap:9px}.towns span{border:1px solid #343841;border-radius:999px;padding:7px 13px;color:#d7dae0;font-size:13px}.area-box{background:linear-gradient(145deg,#1a1d23,#0f1115);border:1px solid #30343c;border-radius:16px;padding:35px;text-align:center}.pin{font-size:42px}.area-box h3{font-size:24px;margin:8px 0}.area-box p{color:#9da2ab}.area-box a{color:#ff4964;font-weight:900;text-decoration:none}
+.about{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}.about-photo{min-height:390px;border-radius:18px;background:linear-gradient(135deg,#101216,#2a0c13);border:1px solid #2c3037;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;box-shadow:inset 0 0 90px rgba(210,15,47,.08)}.about-photo span{font-size:58px;font-weight:1000;letter-spacing:5px;color:#fff}.about-photo small{color:#ff3b58;letter-spacing:4px;font-weight:800}.about>div:last-child>p{color:#656b75}.strong{font-weight:900;color:#20232a!important}
+.contact{background:#111318;color:#fff;text-align:center;padding:75px 0}.contact .section-heading{margin-bottom:20px}.contact .section-heading p{color:#a6abb4}.big-phone{font-size:clamp(38px,7vw,70px);font-weight:1000;color:#ff304e;text-decoration:none;display:block}.contact-inner>p{color:#8f949d}
+footer{background:#08090b;color:#fff}.footer-inner{padding:35px 0;display:flex;justify-content:space-between;gap:20px;align-items:center}.footer-inner strong{letter-spacing:1px}.footer-inner span{color:#777e88;font-size:13px}.footer-inner a{color:#fff;text-decoration:none;font-size:20px;font-weight:900}.copyright{text-align:center;border-top:1px solid #202329;padding:15px;color:#666b74;font-size:12px}
+@media(max-width:760px){.call-small{font-size:14px}.hero{min-height:600px}.hero-content{padding:65px 0}.hero h1{letter-spacing:-2px}.lead{font-size:17px}.trust-grid{grid-template-columns:1fr}.trust-grid div{border-right:0;border-bottom:1px solid rgba(255,255,255,.2);padding:12px}.cards{grid-template-columns:1fr}.section{padding:65px 0}.emergency-inner{display:block}.emergency .btn{margin-top:22px;width:100%}.area-grid,.about{grid-template-columns:1fr;gap:35px}.about-photo{min-height:280px}.about-photo span{font-size:44px}.footer-inner{display:block;text-align:center}.footer-inner a{display:block;margin-top:15px}.nav{min-height:65px}}
+'''
+
+script_js = r'''document.getElementById("year").textContent = new Date().getFullYear();'''
+
+readme = r'''# Carrs Towing & Recovery Website
+
+A free, static, mobile-friendly website for Carrs Towing & Recovery in Veedersburg, Indiana.
+
+## Files
+- index.html — website
+- style.css — design
+- script.js — small footer script
+
+## Phone
+765-299-4181
+
+## Free hosting
+This site can be published for free with GitHub Pages, Cloudflare Pages, or Netlify.
+'''
+
+(root/"index.html").write_text(index_html, encoding="utf-8")
+(root/"style.css").write_text(style_css, encoding="utf-8")
+(root/"script.js").write_text(script_js, encoding="utf-8")
+(root/"README.md").write_text(readme, encoding="utf-8")
+
+zip_path = Path("/mnt/data/Carrs-Towing-Recovery-Website.zip")
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for f in root.iterdir():
+        z.write(f, f.name)
+
+print(f"Created website: {zip_path}")
+print("Files:", ", ".join(p.name for p in root.iterdir()))
